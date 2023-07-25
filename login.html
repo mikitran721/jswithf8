@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/loginAuth.css">
+    <title>Login Authetication</title>
+</head>
+<body>
+    <div class="main">
+        <!-- form -->
+        <form action="" method="post" class="form" id="form-1">
+            <h3 class="heading">Dang ky thanh vien</h3>
+            <p class="desc">
+                Miki Tran thuc hanh JS - DOM 
+                <i class="fa-solid fa-cannabis form-icon"></i>
+                <i class="fa-solid fa-skull-crossbones form-icon"></i> 
+                <i class="fa-solid fa-cannabis form-icon"></i>
+            </p>
+
+            <div class="spacer"></div>
+
+            <!-- fullname -->
+            <div class="form-group">
+                <label for="fullname" class="form-label">Ten day du</label>
+                <input type="text" class="form-control" id="fullname" name="fullname" placeholder="VD: Miki Tran">
+                <span class="form-message"></span>
+            </div>
+
+            <!-- email -->
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="VD: email@domain.com">
+                <span class="form-message"></span>
+            </div>
+
+            <!-- password -->
+            <div class="form-group">
+                <label for="password" class="form-label">Mat khau</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Nhap mat khau">
+                <span class="form-message"></span>
+            </div>
+            
+            <!-- repassword -->
+            <div class="form-group">
+                <label for="password-confirmation" class="form-label">Nhap lai mat khau</label>
+                <input type="password" class="form-control" id="password-confirmation" name="password-confirmation" placeholder="Nhap lai mat khau">
+                <span class="form-message"></span>
+            </div>
+
+            <button class="form-submit">Dang ky</button>
+        </form>
+    </div>
+
+
+    <!-- script source -->
+    <script src="./js/loginAuth.js"></script>
+    <!-- su dung o nhieu project theo syntax -->
+    <script>
+        Validator({
+            form:'#form-1',
+            // the span chua tb loi moi field
+            errorSelector: '.form-message',
+            rules:[
+                Validator.isRequired('#fullname'),
+                Validator.isEmail('#email'),
+                Validator.minLength('#password',6),
+            ]
+        })
+    </script>
+</body>
+</html>
