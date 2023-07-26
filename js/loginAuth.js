@@ -1,6 +1,15 @@
 /* ham nay de tai su dung lai Auth */
 // var $ = document.querySelector;
 function Validator(options) {
+  // get phan tu cha chua span t.bao loi
+  function getParent(element, selector) {
+    while (element.parentElement) {
+      if (element.parentElement.matches(selector)) {
+        return element.parentElement;
+      }
+      element = element.parentElement;
+    }
+  }
   var selectorRules = {};
   //   tach ham xu ly validate
   const validate = (inputElement, rule) => {
@@ -11,22 +20,38 @@ function Validator(options) {
     let rules = selectorRules[rule.selector];
 
     for (let i = 0; i < rules.length; i++) {
-      errorMessage = rules[i](inputElement.value);
+      switch (inputElement.type) {
+        case "checkbox":
+        case "radio":
+          errorMessage = rules[i](
+            formElement.querySelector(rule.selector + ":checked")
+          );
+          break;
+
+        default:
+          errorMessage = rules[i](inputElement.value);
+      }
       if (errorMessage) break;
     }
 
     // console.log(errorMessage);
     //   lay the span bao loi di kem item
-    var messageElement = inputElement.parentElement.querySelector(
-      options.errorSelector
-    );
+    // thay the: var messageElement = getParent(inputElement,'.form-group')
+    var messageElement = getParent(
+      inputElement,
+      options.formGroupSelector
+    ).querySelector(options.errorSelector);
     // kiem tra neu co loi
     if (errorMessage) {
-      inputElement.parentElement.classList.add("invalid");
+      getParent(inputElement, options.formGroupSelector).classList.add(
+        "invalid"
+      );
       messageElement.innerText = errorMessage;
     } else {
       messageElement.innerText = "";
-      inputElement.parentElement.classList.remove("invalid");
+      getParent(inputElement, options.formGroupSelector).classList.remove(
+        "invalid"
+      );
     }
 
     return !!errorMessage;
@@ -34,11 +59,14 @@ function Validator(options) {
 
   /* function: bo thong bao loi */
   const removeNotify = (inputElement) => {
-    var messageElement = inputElement.parentElement.querySelector(
-      options.errorSelector
-    );
+    var messageElement = getParent(
+      inputElement,
+      options.formGroupSelector
+    ).querySelector(options.errorSelector);
     messageElement.innerText = "";
-    inputElement.parentElement.classList.remove("invalid");
+    getParent(inputElement, options.formGroupSelector).classList.remove(
+      "invalid"
+    );
   };
 
   //   lay element cua form can validate
@@ -49,23 +77,47 @@ function Validator(options) {
       e.preventDefault();
       let isFormValid = true;
 
-      // lap qua tung rule va validate luon
+      // lap qua tung rule va validate luon khi submit form
       options.rules.forEach((rule) => {
-        let inputElement = document.querySelector(rule.selector);
-        let isInValid = validate(inputElement, rule);
-        if (isInValid) {
-          isFormValid = false;
-        }
+        let isInValid;
+        let inputElements = document.querySelectorAll(rule.selector);
+        Array.from(inputElements).forEach((inputElement) => {
+          isInValid = validate(inputElement, rule);
+          if (isInValid) {
+            isFormValid = false;
+          }
+        });
       });
 
       let enableInputs = formElement.querySelectorAll("[name]:not([disabled])");
 
       if (isFormValid) {
-        let formValues = Array.from(enableInputs).reduce((values, input) => {
-          return (values[input.name] = input.value) && values;
-        }, {});
-
         if (typeof options.onSubmit === "function") {
+          let formValues = Array.from(enableInputs).reduce((values, input) => {
+            switch (input.type) {
+              case "radio":
+                if (input.matches(":checked")) {
+                  values[input.name] = input.value;
+                }
+                break;
+              case "checkbox":
+                if (
+                  Array.isArray(values[input.name]) &&
+                  input.matches(":checked")
+                ) {
+                  values[input.name].push(input.value);
+                } else if (input.matches(":checked")) {
+                  values[input.name] = [input.value];
+                }
+                break;
+              case "file":
+                values[input.name] = input.files;
+                break;
+              default:
+                values[input.name] = input.value;
+            }
+            return values;
+          }, {});
           // submit voi JS
           options.onSubmit(formValues);
         } else {
@@ -84,19 +136,23 @@ function Validator(options) {
       }
       // selectorRules[rule.selector] = rule.test;
 
-      // lay ra cac element
-      var inputElement = document.querySelector(rule.selector);
-
-      if (inputElement) {
-        // xl blur khoi input
-        inputElement.onblur = () => {
-          validate(inputElement, rule);
-        };
-        // xl moi khi user nhap
-        inputElement.oninput = () => {
-          removeNotify(inputElement);
-        };
-      }
+      // lay ra cac element -> tra ve  la nodelist
+      var inputElements = document.querySelectorAll(rule.selector);
+      Array.from(inputElements).forEach((inputElement) => {
+        if (inputElement) {
+          // xl blur khoi input
+          inputElement.onblur = () => {
+            validate(inputElement, rule);
+          };
+          inputElement.onchange = () => {
+            validate(inputElement, rule);
+          };
+          // xl moi khi user nhap
+          inputElement.oninput = () => {
+            removeNotify(inputElement);
+          };
+        }
+      });
     });
   }
 }
@@ -110,7 +166,8 @@ Validator.isRequired = function (selector, errorMessage) {
   return {
     selector,
     test(value) {
-      return value.trim()
+      let valueReturn = typeof value === "string" ? value.trim() : value;
+      return valueReturn
         ? undefined
         : errorMessage || "Vui long nhap truong nay";
     },

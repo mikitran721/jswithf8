@@ -28,6 +28,22 @@
                 <input type="text" class="form-control" id="fullname" name="fullname" placeholder="VD: Miki Tran">
                 <span class="form-message"></span>
             </div>
+            <!-- profile -->
+            <div class="form-group">
+                <label for="fullname" class="form-label">Anh dai dien</label>
+                <input type="file" class="form-control" id="avatar" name="avatar">
+                <span class="form-message"></span>
+            </div>
+            <!-- tinh/tp -->
+            <div class="form-group">
+                <label for="fullname" class="form-label">Tinh/TP</label>
+                <select class="form-control" id="province" name="province">
+                    <option value="">-- Chon Tinh/TP --</option>
+                    <option value="HCM">TP. HCM</option>
+                    <option value="HNI">TP. HN</option>
+                </select>
+                <span class="form-message"></span>
+            </div>
 
             <!-- email -->
             <div class="form-group">
@@ -50,6 +66,41 @@
                 <span class="form-message"></span>
             </div>
 
+            <!-- gioi tinh -->
+            <div class="form-group horizontal">
+                <label for="gender" class="form-label">Gioi tinh</label>
+                <div>
+                    <input type="radio" class="form-control" name="gender" value="male">
+                    Nam
+                </div>
+                <div>
+                    <input type="radio" class="form-control" name="gender" value="female">
+                    Nu
+                </div>
+                <div>
+                    <input type="radio" class="form-control" name="gender" value="other">
+                    Khac
+                </div>
+                <span class="form-message"></span>
+            </div>
+            <!-- So thich -->
+            <div class="form-group horizontal">
+                <label for="hobby" class="form-label">So thich</label>
+                <div>
+                    <input type="checkbox" class="form-control" name="hobby" value="male">
+                    Nam
+                </div>
+                <div>
+                    <input type="checkbox" class="form-control" name="hobby" value="female">
+                    Nu
+                </div>
+                <div>
+                    <input type="checkbox" class="form-control" name="hobby" value="other">
+                    Khac
+                </div>
+                <span class="form-message"></span>
+            </div>
+
             <button class="form-submit">Dang ky</button>
         </form>
     </div>
@@ -62,18 +113,22 @@
         Validator({
             form:'#form-1',
             // the span chua tb loi moi field
+            formGroupSelector:'.form-group',
             errorSelector: '.form-message',
             rules:[
-                Validator.isRequired('#fullname',"Vui long nhap ten day du cua ban"),
-                Validator.isRequired('#email'),
-                Validator.isEmail('#email'),
-                Validator.minLength('#password',6),
+                // Validator.isRequired('#fullname',"Vui long nhap ten day du cua ban"),
+                Validator.isRequired('#avatar',"Vui long chon anh cua ban"),
+                // Validator.isRequired('#province'),
+                // Validator.isRequired('#email'),
+                // Validator.isEmail('#email'),
+                // Validator.minLength('#password',6),
                 // func return chuoi phai nhap
-                Validator.isRequired('#password-confirmation'),
-                Validator.isConfirmed('#password-confirmation',function(){
-                    // console.log(arguments)
-                    return document.querySelector(`#form-1 #password`).value;
-                },'Mat khau nhap lai khong chinh xac'),
+                // Validator.isRequired('#password-confirmation'),
+                // Validator.isRequired('input[name="gender"]'),
+                // Validator.isRequired('input[name="hobby"]'),
+                // Validator.isConfirmed('#password-confirmation',function(){
+                //     return document.querySelector(`#form-1 #password`).value;
+                // },'Mat khau nhap lai khong chinh xac'),
             ],
             onSubmit(data){
                 // call api
