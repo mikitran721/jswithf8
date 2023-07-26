@@ -64,11 +64,23 @@
             // the span chua tb loi moi field
             errorSelector: '.form-message',
             rules:[
-                Validator.isRequired('#fullname'),
+                Validator.isRequired('#fullname',"Vui long nhap ten day du cua ban"),
+                Validator.isRequired('#email'),
                 Validator.isEmail('#email'),
                 Validator.minLength('#password',6),
-            ]
+                // func return chuoi phai nhap
+                Validator.isRequired('#password-confirmation'),
+                Validator.isConfirmed('#password-confirmation',function(){
+                    // console.log(arguments)
+                    return document.querySelector(`#form-1 #password`).value;
+                },'Mat khau nhap lai khong chinh xac'),
+            ],
+            onSubmit(data){
+                // call api
+                console.log(data);
+            }
         })
+        // ap dung nhieu rule cho 1 selector
     </script>
 </body>
 </html>
