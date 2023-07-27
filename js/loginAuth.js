@@ -89,10 +89,11 @@ function Validator(options) {
         });
       });
 
-      let enableInputs = formElement.querySelectorAll("[name]:not([disabled])");
-
       if (isFormValid) {
         if (typeof options.onSubmit === "function") {
+          let enableInputs = formElement.querySelectorAll(
+            "[name]:not([disabled])"
+          );
           let formValues = Array.from(enableInputs).reduce((values, input) => {
             switch (input.type) {
               case "radio":

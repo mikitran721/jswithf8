@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="./css/base.css">
-    <link rel="stylesheet" href="./css/loginAuth.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/loginAuth.css">
     <title>Login Authetication</title>
 </head>
 <body>
     <div class="main">
         <!-- form -->
-        <form action="" method="post" class="form" id="form-1">
+        <form action="" method="post" class="form" id="register-form">
             <h3 class="heading">Dang ky thanh vien</h3>
             <p class="desc">
-                Miki Tran thuc hanh JS - DOM 
+                Miki Tran thuc hanh JS - DOM (v2 - Library)
                 <i class="fa-solid fa-cannabis form-icon"></i>
                 <i class="fa-solid fa-skull-crossbones form-icon"></i> 
                 <i class="fa-solid fa-cannabis form-icon"></i>
@@ -25,7 +25,7 @@
             <!-- fullname -->
             <div class="form-group">
                 <label for="fullname" class="form-label">Ten day du</label>
-                <input type="text" class="form-control" id="fullname" name="fullname" placeholder="VD: Miki Tran">
+                <input rules="required" type="text" class="form-control" id="fullname" name="fullname" placeholder="VD: Miki Tran">
                 <span class="form-message"></span>
             </div>
             <!-- profile -->
@@ -48,14 +48,14 @@
             <!-- email -->
             <div class="form-group">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="VD: email@domain.com">
+                <input rules="required|email" type="email" class="form-control" id="email" name="email" placeholder="VD: email@domain.com">
                 <span class="form-message"></span>
             </div>
 
             <!-- password -->
             <div class="form-group">
                 <label for="password" class="form-label">Mat khau</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Nhap mat khau">
+                <input rules="required|min:6" type="password" class="form-control" id="password" name="password" placeholder="Nhap mat khau">
                 <span class="form-message"></span>
             </div>
             
@@ -107,35 +107,16 @@
 
 
     <!-- script source -->
-    <script src="./js/loginAuth.js"></script>
+    <script src="../js/loginLibrary.js"></script>
     <!-- su dung o nhieu project theo syntax -->
     <script>
-        Validator({
-            form:'#form-1',
-            // the span chua tb loi moi field
-            formGroupSelector:'.form-group',
-            errorSelector: '.form-message',
-            rules:[
-                Validator.isRequired('#fullname',"Vui long nhap ten day du cua ban"),
-                Validator.isRequired('#avatar',"Vui long chon anh cua ban"),
-                Validator.isRequired('#province'),
-                Validator.isRequired('#email'),
-                Validator.isEmail('#email'),
-                Validator.minLength('#password',6),
-                Validator.isRequired('input[name="gender"]'),
-                Validator.isRequired('input[name="hobby"]'),
-                Validator.isRequired('#password-confirmation'),
-                // func return chuoi phai nhap
-                Validator.isConfirmed('#password-confirmation',function(){
-                    return document.querySelector(`#form-1 #password`).value;
-                },'Mat khau nhap lai khong chinh xac'),
-            ],
-            onSubmit(data){
-                // call api
-                console.log(data);
+        // ky vong: don gian, code it hon, sd cho nhieu form
+        Validator('#register-form',{
+            onSubmit:function(data){
+                console.log(data)
+                console.log('Call API...')
             }
         })
-        // ap dung nhieu rule cho 1 selector
     </script>
 </body>
 </html>
